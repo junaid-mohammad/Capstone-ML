@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env/
+machine_learning_env/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Model files
+model/*.pkl

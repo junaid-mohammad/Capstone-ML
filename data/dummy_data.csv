@@ -1,0 +1,4 @@
+sender,subject,body,category
+"john@example.com","Budget Update","Please find the budget report attached.","Finance"
+"mary@example.com","Meeting Reminder","Don't forget about tomorrow's meeting.","Task Assignment"
+"info@gov.pl","Quarterly Report Submission","Submit the quarterly report by Friday.","Government Reporting"
