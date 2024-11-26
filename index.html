@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Categorization</title>
+  </head>
+  <body>
+    <h1>Email Categorization</h1>
+    <form id="email-form">
+      <label for="subject">Email Subject:</label><br />
+      <input type="text" id="subject" name="subject" required /><br /><br />
+
+      <label for="body">Email Body:</label><br />
+      <textarea id="body" name="body" rows="4" cols="50" required></textarea
+      ><br /><br />
+
+      <button type="submit">Predict Category</button>
+    </form>
+
+    <h2>Predicted Category:</h2>
+    <p id="result"></p>
+
+    <script>
+      document
+        .getElementById("email-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const subject = document.getElementById("subject").value;
+          const body = document.getElementById("body").value;
+
+          const response = await fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ subject, body }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            document.getElementById("result").textContent = result.category;
+          } else {
+            document.getElementById("result").textContent =
+              result.error || "An error occurred.";
+          }
+        });
+    </script>
+  </body>
+</html>

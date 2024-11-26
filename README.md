@@ -4,7 +4,7 @@
 
 This project is designed to categorize incoming emails for a Polish NPO based on the sender, subject, and body of the emails. The machine learning model suggests a category for each email, which users can accept, modify, or replace with a new category. User feedback is incorporated to improve the model continuously.
 
-The project uses Python for machine learning and text processing, with a lightweight setup to ensure cross-platform compatibility for macOS and Windows users.
+The project uses Python for machine learning and text processing, with a lightweight setup to ensure cross-platform compatibility for macOS and Windows users. Additionally, a Flask-based API provides backend functionality, and a simple web interface enables users to interact with the model.
 
 ---
 
@@ -40,7 +40,7 @@ cd Capstone-ML
 
 - **Windows:**
   ```bash
-  python -m venv machine_learning_env
+  python3 -m venv machine_learning_env
   machine_learning_env\Scripts\activate
   ```
 
@@ -57,27 +57,60 @@ pip install -r requirements.txt
 Run the following command to train the email categorization model:
 
 ```bash
-python model/train_model.py
+python3 model/train_model.py
 ```
 
-#### 5. Test the Model
+#### 5. Test the Model - Start the Flask API
 
-To test the model, run:
+To enable API calls and serve the web interface, start the Flask app:
 
 ```bash
-python model/predict_category.py
+python3 api/app.py
 ```
 
-You will be prompted to input a subject and body. The model will output the predicted category for the given input.
+This will start the local development server at `http://127.0.0.1:5000`.
+
+#### 6. Access the Web Interface
+
+Open a browser and navigate to:
+
+```
+http://127.0.0.1:5000
+```
+
+Here, you can enter an email subject and body into the form, submit the data, and see the predicted category displayed below the form.
 
 ---
 
-### Confirm Everything Works
+### **Confirm Model is Trained and API and Web Interface Work**
 
 After completing the above steps:
 
 1. Ensure the model is trained without errors during the training step.
-2. Test the model using different email inputs to verify predictions.
+
+2. Test the model using different email inputs on the browser http://127.0.0.1:5000/ to verify predictions.
+
+3. **Test the `/predict` API Endpoint**:
+
+   **Note**: Testing `/predict` directly with Postman or `curl` allows you to validate the API independently of the web interface. Use this to confirm the model works before testing the HTML form.
+
+   - Use a tool like Postman or `curl` to send POST requests directly to the API.
+   - Example request:
+     ```bash
+     curl -X POST http://127.0.0.1:5000/predict \
+     -H "Content-Type: application/json" \
+     -d '{"subject": "Meeting Update", "body": "Please attend the meeting at 10 AM"}'
+     ```
+   - Expected response:
+     ```json
+     {
+       "category": "Task Assignment"
+     }
+     ```
+
+4. **Test the Web Interface**:
+   - Open `http://127.0.0.1:5000` in a browser.
+   - Enter test data into the form and verify the predicted category appears below.
 
 ---
 
@@ -89,15 +122,18 @@ This section explains the purpose of each folder and file in the project.
 Capstone-ML/
 │
 ├── model/
-│   ├── train_model.py         # Script to train the email categorization model
-│   ├── predict_category.py    # Script to test predictions from the trained model
+│   ├── train_model.py         # Trains the email categorization model and saves it as `email_categorizer.pkl`
+│   ├── predict_category.py    # Provides reusable prediction logic for the trained model
 │   ├── feedback_loop.py       # Script (to be developed) for handling user feedback
+│   ├── email_categorizer.pkl  # Serialized trained model used for predictions
 │
 ├── data/
 │   ├── dummy_data.csv         # Example dataset for initial model training
 │
 ├── api/
-│   ├── app.py                 # Flask API for integrating the machine learning model with a frontend (to be developed)
+│   ├── app.py                 # Flask API to serve predictions and the web interface
+│
+├── index.html                 # Web interface for email categorization
 │
 ├── utils/
 │   ├── preprocess.py          # Utility functions for text preprocessing
@@ -118,7 +154,7 @@ Capstone-ML/
 
    - Contains scripts for model training, testing, and continuous improvement.
    - `train_model.py` trains the model using the dataset in `data/`.
-   - `predict_category.py` allows you to test the trained model's predictions.
+   - `predict_category.py` Contains reusable logic for predicting categories based on email subject and body. Imported into `app.py` for serving predictions via the API.
 
 2. **data/**
 
@@ -127,21 +163,28 @@ Capstone-ML/
 
 3. **api/**
 
-   - Will house the backend Flask API for serving the model to a frontend or other services.
+   - `app.py` - Flask application that serves:
+     - **API endpoints** for predictions (e.g., `/predict`).
+     - **Static files**, including `index.html`, for the web interface.
 
-4. **utils/**
+4. **`index.html`**:
+
+   - A user-friendly interface to input email data and see predicted categories.
+   - Interacts with the Flask API using JavaScript.
+
+5. **utils/**
 
    - Contains helper scripts for tasks like text preprocessing or data formatting.
 
-5. **tests/**
+6. **tests/**
 
    - Includes unit tests to validate different aspects of the project (e.g., model accuracy, preprocessing correctness).
 
-6. **requirements.txt**
+7. **requirements.txt**
 
    - Lists all Python dependencies for the project. Use this file to install the required libraries.
 
-7. **.gitignore**
+8. **.gitignore**
    - Ensures unnecessary or large files, like the `machine_learning_env/` folder, are not tracked by Git.
 
 ---
@@ -151,7 +194,7 @@ Capstone-ML/
 1. **Feedback Loop:**
    - Develop `feedback_loop.py` to incorporate user feedback into model improvement.
 2. **API Integration:**
-   - Build a Flask-based API to interact with the machine learning model and serve predictions.
+   - Add endpoints for advanced functionality, like logging predictions or retrieving prediction history.
 3. **Dataset Expansion:**
    - Replace the dummy dataset with real-world email data to improve the model's accuracy.
 
