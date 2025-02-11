@@ -1,28 +1,42 @@
-# Capstone Project - Machine Learning Email Categorization
+# Capstone Project - Machine Learning Email Categorization (Updated for GPT-based Model)
 
 ## Overview
 
-This project is designed to categorize incoming emails for a Polish NPO based on the sender, subject, and body of the emails. The machine learning model suggests a category for each email, which users can accept, modify, or replace with a new category. User feedback is incorporated to improve the model continuously.
+This project is designed to categorize incoming emails for a Polish NPO based on the sender, subject, and body of the emails. Initially, we used a custom-built machine learning model trained on a local dataset (`dummy_data.csv`). However, after extensive evaluation, we transitioned to using a **GPT-based categorization model** for its superior accuracy, flexibility, and ease of integration.
 
-The project uses Python for machine learning and text processing, with a lightweight setup to ensure cross-platform compatibility for macOS and Windows users. Additionally, a Flask-based API provides backend functionality, and a simple web interface enables users to interact with the model.
+The current implementation leverages OpenAI’s **GPT API**, which classifies emails into one of ten predefined categories relevant to the NGO’s focus on mental health and wellness.
+
+Despite its advantages, this approach raises potential **privacy concerns** due to data processing on external servers. Therefore, it is considered a **prototype** and may eventually be replaced by a **self-hosted LLM** for better control and privacy.
 
 ---
 
-## Setup Instructions
+## Why the Shift to GPT?
+
+The primary reasons for transitioning to GPT-based categorization include:
+
+1. **Higher Accuracy and Robustness** – Pretrained models like GPT are better at understanding complex language patterns.
+2. **Faster Development and Integration** – Avoided the time-consuming process of building and fine-tuning a custom model.
+3. **Scalability and Flexibility** – GPT can easily handle new categories and adapt to changing requirements.
+4. **Simplified Maintenance** – No need to retrain and deploy models regularly.
+
+However, this transition was also guided by practical limitations of the initial approach, such as limited data availability and concerns about prediction accuracy using a small dataset.
+
+---
+
+## Setup Instructions (Updated)
 
 ### Prerequisites
 
-- **Python 3.10+** installed on your system
-- Git installed
-- A terminal or command line interface (e.g., Terminal for macOS, Command Prompt or PowerShell for Windows)
+- **Python 3.10+** installed on your system.
+- Git installed.
+- A terminal or command line interface (e.g., Terminal for macOS, Command Prompt or PowerShell for Windows).
+- **OpenAI API Key** – You must generate your own API key from [OpenAI's platform](https://platform.openai.com/) and add it to a `.env` file.
 
 ---
 
 ### Step-by-Step Guide to Set Up and Run the Project
 
 #### 1. Clone the Repository
-
-Open a terminal and run the following commands:
 
 ```bash
 git clone https://github.com/junaid-mohammad/Capstone-ML.git
@@ -31,44 +45,36 @@ cd Capstone-ML
 
 #### 2. Create a Virtual Environment
 
-- **macOS/Linux:**
-
-  ```bash
-  python3 -m venv machine_learning_env
-  source machine_learning_env/bin/activate
-  ```
-
-- **Windows:**
-  ```bash
-  python3 -m venv machine_learning_env
-  machine_learning_env\Scripts\activate
-  ```
+```bash
+python3 -m venv machine_learning_env
+source machine_learning_env/bin/activate  # On macOS/Linux
+machine_learning_env\Scripts\activate  # On Windows
+```
 
 #### 3. Install Dependencies
-
-With the virtual environment activated, install the required Python libraries:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Train the Model
+#### 4. Add Your OpenAI API Key
 
-Run the following command to train the email categorization model:
+1. Create a `.env` file in the project root directory.
+2. Add the following line to your `.env` file:
+
+   ```
+   OPENAI_API_KEY=your-api-key-here
+   ```
+
+This API key is required for the GPT-based email categorization.
+
+#### 5. Start the Flask API
 
 ```bash
-python3 model/train_model.py
+python api/app.py
 ```
 
-#### 5. Test the Model - Start the Flask API
-
-To enable API calls and serve the web interface, start the Flask app:
-
-```bash
-python3 api/app.py
-```
-
-This will start the local development server at `http://127.0.0.1:5000`.
+The Flask app will start at `http://127.0.0.1:5000`.
 
 #### 6. Access the Web Interface
 
@@ -78,125 +84,77 @@ Open a browser and navigate to:
 http://127.0.0.1:5000
 ```
 
-Here, you can enter an email subject and body into the form, submit the data, and see the predicted category displayed below the form.
-
----
-
-### **Confirm Model is Trained and API and Web Interface Work**
-
-After completing the above steps:
-
-1. Ensure the model is trained without errors during the training step.
-
-2. Test the model using different email inputs on the browser http://127.0.0.1:5000/ to verify predictions.
-
-3. **Test the `/predict` API Endpoint**:
-
-   **Note**: Testing `/predict` directly with Postman or `curl` allows you to validate the API independently of the web interface. Use this to confirm the model works before testing the HTML form.
-
-   - Use a tool like Postman or `curl` to send POST requests directly to the API.
-   - Example request:
-     ```bash
-     curl -X POST http://127.0.0.1:5000/predict \
-     -H "Content-Type: application/json" \
-     -d '{"subject": "Meeting Update", "body": "Please attend the meeting at 10 AM"}'
-     ```
-   - Expected response:
-     ```json
-     {
-       "category": "Task Assignment"
-     }
-     ```
-
-4. **Test the Web Interface**:
-   - Open `http://127.0.0.1:5000` in a browser.
-   - Enter test data into the form and verify the predicted category appears below.
+Enter the sender’s email, email subject, and body. The predicted category will be displayed below the form.
 
 ---
 
 ## Project Structure
 
-This section explains the purpose of each folder and file in the project.
+Here’s an updated overview of the project structure:
 
 ```
 Capstone-ML/
 │
-├── model/
-│   ├── train_model.py         # Trains the email categorization model and saves it as `email_categorizer.pkl`
-│   ├── predict_category.py    # Provides reusable prediction logic for the trained model
-│   ├── feedback_loop.py       # Script (to be developed) for handling user feedback
-│   ├── email_categorizer.pkl  # Serialized trained model used for predictions
+├── api/
+│   ├── app.py                 # Flask API to serve predictions and the web interface.
 │
 ├── data/
-│   ├── dummy_data.csv         # Example dataset for initial model training
+│   ├── AI_data.json           # Example dataset generated using AI
 │
-├── api/
-│   ├── app.py                 # Flask API to serve predictions and the web interface
+├── static/
+│   ├── styles.css             # CSS for the modern black-themed user interface.
 │
-├── index.html                 # Web interface for email categorization
+├── index.html                 # Web interface for email categorization.
 │
-├── utils/
-│   ├── preprocess.py          # Utility functions for text preprocessing
-│
-├── tests/
-│   ├── test_model.py          # Unit tests for ensuring model functionality
-│
-├── machine_learning_env/      # Virtual environment folder (ignored by Git)
-│
-├── requirements.txt           # List of dependencies required for the project
-├── .gitignore                 # Specifies files and folders to ignore in Git
-└── README.md                  # Documentation for the project
+├── .env                       # Environment file to store your OpenAI API key.
+├── requirements.txt           # List of dependencies required for the project.
+├── .gitignore                 # Specifies files and folders to ignore in Git.
+└── README.md                  # Documentation for the project.
 ```
 
 ### Key Components
 
-1. **model/**
+1. **api/app.py** – Contains the Flask API for handling requests and interacting with OpenAI’s API for predictions.
 
-   - Contains scripts for model training, testing, and continuous improvement.
-   - `train_model.py` trains the model using the dataset in `data/`.
-   - `predict_category.py` Contains reusable logic for predicting categories based on email subject and body. Imported into `app.py` for serving predictions via the API.
+2. **data/AI_data.json** – Sample dataset for testing the AI model.
 
-2. **data/**
+3. **index.html** – A user-friendly web interface for entering email details and receiving predictions.
 
-   - Holds the datasets for model training.
-   - `dummy_data.csv` is a sample dataset for initial testing and training.
+4. **static/styles.css** – Custom CSS for a modern and intuitive user experience.
 
-3. **api/**
-
-   - `app.py` - Flask application that serves:
-     - **API endpoints** for predictions (e.g., `/predict`).
-     - **Static files**, including `index.html`, for the web interface.
-
-4. **`index.html`**:
-
-   - A user-friendly interface to input email data and see predicted categories.
-   - Interacts with the Flask API using JavaScript.
-
-5. **utils/**
-
-   - Contains helper scripts for tasks like text preprocessing or data formatting.
-
-6. **tests/**
-
-   - Includes unit tests to validate different aspects of the project (e.g., model accuracy, preprocessing correctness).
-
-7. **requirements.txt**
-
-   - Lists all Python dependencies for the project. Use this file to install the required libraries.
-
-8. **.gitignore**
-   - Ensures unnecessary or large files, like the `machine_learning_env/` folder, are not tracked by Git.
+5. **.env** – Stores the OpenAI API key securely.
 
 ---
 
-## Future Development
+## Supported Categories
 
-1. **Feedback Loop:**
-   - Develop `feedback_loop.py` to incorporate user feedback into model improvement.
-2. **API Integration:**
-   - Add endpoints for advanced functionality, like logging predictions or retrieving prediction history.
-3. **Dataset Expansion:**
-   - Replace the dummy dataset with real-world email data to improve the model's accuracy.
+The system categorizes emails into the following categories:
+
+1. 📋 **General Inquiry** – General questions about the NGO’s mission or services.
+2. 🧠 **Patient Support & Counseling Request** – Seeking mental health resources or therapy guidance.
+3. 💰 **Funding & Donations** – Related to fundraising, donor inquiries, and grants.
+4. 📅 **Appointment Scheduling** – Requests to schedule or reschedule therapy sessions.
+5. 🤝 **Volunteer & Internship Applications** – Applications for volunteering or internships.
+6. ⚖️ **Legal & Compliance** – Topics related to patient rights, GDPR, or legal matters.
+7. 📢 **Awareness & Advocacy** – Requests for partnerships, campaigns, or media inquiries.
+8. 📚 **Educational Resources** – Requests for mental health guides, articles, or workshops.
+9. 👨‍👩‍👧 **Family & Caregiver Support** – Guidance for caregivers supporting individuals with mental health conditions.
+10. 🛑 **Spam & Irrelevant Messages** – Advertisements, promotions, or unrelated emails.
+
+---
+
+## Privacy Concerns and Future Plans
+
+While the GPT-based solution demonstrates the potential for automated email categorization, it also introduces significant privacy concerns:
+
+1. **Data Privacy Risks** – Since the data is processed on OpenAI’s servers, sensitive information could be exposed.
+2. **External Dependency** – Relying on an external service may not align with the NGO’s long-term goals.
+
+### Next Steps:
+
+1. **Explore Self-Hosted Open-Source LLMs** – This would allow the NGO to maintain full control over its data.
+2. **Refine Data Anonymization Processes** – Ensure sensitive data is adequately anonymized before processing.
+3. **Develop Feedback and Logging Systems** – Improve the categorization accuracy through continuous learning from user feedback.
 
 ---
 
@@ -206,3 +164,5 @@ Capstone-ML/
 - Shyam Desai
 - Minji Chang
 - Harry Park
+
+---

@@ -1,0 +1,173 @@
+/* Modern, sleek, yet more human-friendly UI */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Raleway:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1e1e1e, #222);
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2.8rem;
+    color: #00c3ff;
+    margin: 0;
+    font-weight: 600;
+}
+
+p {
+    color: #bbb;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+main {
+    width: 80%;
+    max-width: 900px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.form-container, .result-container, .category-list {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+h2 {
+    font-family: 'Raleway', sans-serif;
+    color: #00ff99;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #00c3ff;
+    font-weight: 400;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    background: #222;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus, textarea:focus {
+    border-color: #00c3ff;
+    box-shadow: 0px 0px 8px rgba(0, 195, 255, 0.5);
+}
+
+button {
+    width: 100%;
+    background: linear-gradient(135deg, #00c3ff, #009fcc);
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+    font-family: 'Raleway', sans-serif;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #009fcc, #0077aa);
+    transform: scale(1.05);
+}
+
+/* 🔥 Attention-Grabbing Predicted Category */
+.result-container {
+    text-align: center;
+    font-size: 1.5rem;
+    background: #252525;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+    border-left: 6px solid #ffcc00;
+    transition: 0.5s;
+}
+
+#result {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #ffcc00;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.result-show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.category-list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-list li {
+    background: #333;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    display: inline-block;
+    transition: 0.3s ease-in-out;
+}
+
+.category-list li:hover {
+    background: #00c3ff;
+    transform: scale(1.05);
+}
+
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 15px;
+    background: #000;
+    width: 100%;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 300;
+}

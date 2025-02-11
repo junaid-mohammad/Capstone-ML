@@ -3,23 +3,115 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Email Categorization</title>
+    <title>Email Categorizer</title>
+    <link rel="stylesheet" href="static/styles.css" />
   </head>
   <body>
-    <h1>Email Categorization</h1>
-    <form id="email-form">
-      <label for="subject">Email Subject:</label><br />
-      <input type="text" id="subject" name="subject" required /><br /><br />
+    <header>
+      <h1>AI Email Categorization</h1>
+      <p>Smart, AI-driven email classification to streamline your workflow.</p>
+    </header>
 
-      <label for="body">Email Body:</label><br />
-      <textarea id="body" name="body" rows="4" cols="50" required></textarea
-      ><br /><br />
+    <main>
+      <section class="form-container">
+        <h2>🚀 Classify Your Emails Instantly</h2>
+        <p>
+          Enter the sender email, subject, and body of the email to receive an
+          AI-generated category.
+        </p>
+        <form id="email-form">
+          <div class="input-group">
+            <label for="sender">📧 Sender Email</label>
+            <input
+              type="email"
+              id="sender"
+              name="sender"
+              required
+              placeholder="example@email.com"
+            />
+          </div>
+          <div class="input-group">
+            <label for="subject">📝 Email Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              required
+              placeholder="Enter email subject"
+            />
+          </div>
+          <div class="input-group">
+            <label for="body">📜 Email Body</label>
+            <textarea
+              id="body"
+              name="body"
+              rows="5"
+              required
+              placeholder="Type the email content here..."
+            ></textarea>
+          </div>
+          <button type="submit" class="btn">🔍 Predict Category</button>
+        </form>
+      </section>
 
-      <button type="submit">Predict Category</button>
-    </form>
+      <section class="result-container">
+        <h2>🔍 AI Predicted Category</h2>
+        <p id="result">Your category will appear here...</p>
+      </section>
 
-    <h2>Predicted Category:</h2>
-    <p id="result"></p>
+      <section class="category-list">
+        <h2>📌 Supported Categories</h2>
+        <p>
+          Emails will be classified into one of these predefined categories:
+        </p>
+        <ul>
+          <li>
+            📋 <b>General Inquiry</b> – General questions about the NGO’s
+            mission or services.
+          </li>
+          <li>
+            🧠 <b>Patient Support & Counseling Request</b> – Seeking mental
+            health resources or therapy guidance.
+          </li>
+          <li>
+            💰 <b>Funding & Donations</b> – Related to fundraising, donor
+            inquiries, and grants.
+          </li>
+          <li>
+            📅 <b>Appointment Scheduling</b> – Requests to schedule or
+            reschedule therapy sessions.
+          </li>
+          <li>
+            🤝 <b>Volunteer & Internship Applications</b> – Applications for
+            volunteering or internships.
+          </li>
+          <li>
+            ⚖️ <b>Legal & Compliance</b> – Topics related to patient rights,
+            GDPR, or legal matters.
+          </li>
+          <li>
+            📢 <b>Awareness & Advocacy</b> – Requests for partnerships,
+            campaigns, or media inquiries.
+          </li>
+          <li>
+            📚 <b>Educational Resources</b> – Requests for mental health guides,
+            articles, or workshops.
+          </li>
+          <li>
+            👨‍👩‍👧 <b>Family & Caregiver Support</b> – Guidance for caregivers
+            supporting individuals with mental health conditions.
+          </li>
+          <li>
+            🛑 <b>Spam & Irrelevant Messages</b> – Advertisements, promotions,
+            or unrelated emails.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Copyright © McGill Capstone Team 21 | Powered by OpenAI</p>
+    </footer>
 
     <script>
       document
@@ -27,23 +119,28 @@
         .addEventListener("submit", async function (e) {
           e.preventDefault();
 
+          const sender = document.getElementById("sender").value;
           const subject = document.getElementById("subject").value;
           const body = document.getElementById("body").value;
+          const resultElement = document.getElementById("result");
 
-          const response = await fetch("http://127.0.0.1:5000/predict", {
+          resultElement.textContent = "Processing...";
+          resultElement.classList.remove("result-show");
+
+          const response = await fetch("/predict", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ subject, body }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sender, subject, body }),
           });
 
           const result = await response.json();
+
           if (response.ok) {
-            document.getElementById("result").textContent = result.category;
+            resultElement.textContent = `🎯 ${result.category}`;
+            resultElement.style.color = "#ffcc00"; // Ensure color pops
+            resultElement.classList.add("result-show");
           } else {
-            document.getElementById("result").textContent =
-              result.error || "An error occurred.";
+            resultElement.textContent = result.error || "An error occurred.";
           }
         });
     </script>
