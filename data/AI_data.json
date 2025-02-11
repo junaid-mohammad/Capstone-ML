@@ -1,0 +1,122 @@
+[
+    {
+        "sender": "john.doe@example.com",
+        "subject": "Inquiry about your mental health services",
+        "body": "Hello, I am interested in learning more about the mental health services your organization provides. Could you please send me more details?",
+        "expected_category": "General Inquiry"
+    },
+    {
+        "sender": "jane.smith@healthcare.org",
+        "subject": "Seeking counseling for anxiety",
+        "body": "I have been struggling with anxiety and depression. I was wondering if I could get counseling or any support from your organization.",
+        "expected_category": "Patient Support & Counseling Request"
+    },
+    {
+        "sender": "funding@donorinitiative.com",
+        "subject": "Grant opportunity for mental health initiatives",
+        "body": "We are offering grants to support mental health initiatives. Please let us know if your organization is interested in applying.",
+        "expected_category": "Funding & Donations"
+    },
+    {
+        "sender": "appointments@mentalwellness.org",
+        "subject": "Rescheduling my therapy session",
+        "body": "I would like to reschedule my therapy appointment scheduled for next Monday. What are the available slots?",
+        "expected_category": "Appointment Scheduling"
+    },
+    {
+        "sender": "volunteer@communityhelp.org",
+        "subject": "Volunteer opportunity inquiry",
+        "body": "I am interested in volunteering at your organization. Could you let me know about any open positions?",
+        "expected_category": "Volunteer & Internship Applications"
+    },
+    {
+        "sender": "legal@lawfirm.com",
+        "subject": "Confidentiality of patient data",
+        "body": "Can you provide information on how your organization ensures compliance with GDPR and other data protection regulations?",
+        "expected_category": "Legal & Compliance"
+    },
+    {
+        "sender": "media@advocacynews.org",
+        "subject": "Partnership for mental health awareness campaign",
+        "body": "We are running a campaign to promote mental health awareness. Would your organization be interested in collaborating?",
+        "expected_category": "Awareness & Advocacy"
+    },
+    {
+        "sender": "library@education.org",
+        "subject": "Request for mental health educational materials",
+        "body": "We are a school looking to expand our mental health education program. Can you provide any brochures or guides?",
+        "expected_category": "Educational Resources"
+    },
+    {
+        "sender": "caregiver@supportgroup.com",
+        "subject": "Advice on helping a family member with ADHD",
+        "body": "My son has recently been diagnosed with ADHD. I am looking for advice and resources to better support him.",
+        "expected_category": "Family & Caregiver Support"
+    },
+    {
+        "sender": "spam@randommarketing.com",
+        "subject": "Increase your social media presence!",
+        "body": "We can help you gain more followers on Instagram and Facebook. Contact us today!",
+        "expected_category": "Spam & Irrelevant Messages"
+    },
+    {
+        "sender": "john.doe@example.com",
+        "subject": "Inquiry about mental health support",
+        "body": "Hello,\n\nI recently came across your NGO while searching for mental health support services. I have been struggling with stress and anxiety due to work pressure and personal challenges. I wanted to know if your organization provides any resources or support groups that can help me navigate this difficult time.\n\nAdditionally, do you have any virtual counseling sessions available? I would really appreciate any guidance you can offer.\n\nBest regards,\nJohn Doe",
+        "expected_category": "General Inquiry"
+    },
+    {
+        "sender": "jane.smith@healthcare.org",
+        "subject": "Seeking therapy for ADHD management",
+        "body": "Dear Team,\n\nMy son was recently diagnosed with ADHD, and I have been looking for resources to help us understand how to manage his symptoms effectively. We would like to explore therapy options and behavioral interventions that your organization may offer or recommend.\n\nDo you provide one-on-one counseling for parents or workshops for families? If so, could you share details about the registration process and the availability of professionals specialized in ADHD support?\n\nLooking forward to your response.\n\nSincerely,\nJane Smith",
+        "expected_category": "Patient Support & Counseling Request"
+    },
+    {
+        "sender": "funding@donorinitiative.com",
+        "subject": "Grant funding for mental health initiatives",
+        "body": "Hello,\n\nWe are pleased to inform you that our organization is offering grants for mental health and wellness initiatives in local communities. Your NGO has been shortlisted as a potential recipient based on your past work in providing mental health support.\n\nPlease submit a proposal outlining how you plan to utilize the funds, the number of individuals you aim to help, and the expected impact of the project. The deadline for applications is March 15, and selected organizations will receive funding within the following quarter.\n\nBest regards,\nFunding Team",
+        "expected_category": "Funding & Donations"
+    },
+    {
+        "sender": "appointments@mentalwellness.org",
+        "subject": "Request to reschedule therapy session",
+        "body": "Dear Support Team,\n\nI had a therapy session scheduled for next Wednesday at 2:00 PM, but due to unforeseen work commitments, I will not be able to attend at that time. Would it be possible to reschedule my session for a later date? I am available any time after 5:00 PM on weekdays or on Saturday mornings.\n\nPlease let me know the available slots and the process for rescheduling.\n\nThank you for your assistance.\n\nRegards,\nEmily R.",
+        "expected_category": "Appointment Scheduling"
+    },
+    {
+        "sender": "volunteer@communityhelp.org",
+        "subject": "Application for volunteer program",
+        "body": "Dear Volunteer Coordinator,\n\nI recently learned about your organization’s work in mental health advocacy, and I would love to get involved as a volunteer. I have experience working in community outreach and have completed training in mental health first aid.\n\nCould you please provide information about current volunteer opportunities, the expected time commitment, and the application process? I am particularly interested in participating in awareness campaigns or assisting with counseling sessions.\n\nBest regards,\nAlex Johnson",
+        "expected_category": "Volunteer & Internship Applications"
+    },
+    {
+        "sender": "legal@lawfirm.com",
+        "subject": "Compliance with patient confidentiality laws",
+        "body": "Dear Legal Team,\n\nAs an external consultant reviewing NGO policies, I would like to understand how your organization ensures compliance with data privacy and patient confidentiality laws such as GDPR and HIPAA.\n\nCould you provide details on your data handling policies, security measures, and consent requirements for storing and processing client information? Additionally, do you offer legal resources for clients who need assistance with mental health-related legal concerns?\n\nBest regards,\nLegal Compliance Team",
+        "expected_category": "Legal & Compliance"
+    },
+    {
+        "sender": "media@advocacynews.org",
+        "subject": "Media collaboration for mental health awareness campaign",
+        "body": "Hello,\n\nI am a journalist working on a feature about mental health awareness, and I am interested in highlighting the work of your organization. We are producing a documentary that explores the impact of mental health support services on individuals struggling with depression and ADHD.\n\nWould you be open to participating in an interview or providing expert opinions on the challenges faced by patients? Additionally, if you have ongoing awareness programs, we would love to feature them in our story.\n\nLooking forward to your response.\n\nBest regards,\nMedia Outreach Team",
+        "expected_category": "Awareness & Advocacy"
+    },
+    {
+        "sender": "library@education.org",
+        "subject": "Request for mental health educational materials",
+        "body": "Dear Education Team,\n\nWe are looking to expand our school’s mental health curriculum and are in need of well-researched educational materials that can be used for student awareness sessions. Could you share any brochures, booklets, or online resources that your organization provides?\n\nWe would also love to collaborate on organizing a workshop for teachers on recognizing early signs of anxiety and depression in students.\n\nThank you for your support.\n\nBest regards,\nSchool Administration Team",
+        "expected_category": "Educational Resources"
+    },
+    {
+        "sender": "caregiver@supportgroup.com",
+        "subject": "Guidance for supporting a family member with depression",
+        "body": "Hello,\n\nMy sister has been struggling with severe depression for the past year, and I often find it difficult to provide the right kind of support. I want to be there for her, but sometimes I feel lost and unsure about what to do.\n\nCould your team recommend any resources or support groups for family members of individuals dealing with mental health challenges? I would also appreciate guidance on how to communicate effectively and encourage professional help without pushing too hard.\n\nThank you for your time.\n\nBest regards,\nMichael",
+        "expected_category": "Family & Caregiver Support"
+    },
+    {
+        "sender": "spam@randommarketing.com",
+        "subject": "Special offer: Get mental health supplements at 50% off!",
+        "body": "Dear Customer,\n\nWe are offering a limited-time discount on our range of natural supplements designed to reduce stress and anxiety. Order today and get 50% off your first purchase!\n\nVisit our website to place your order now!\n\nBest Regards,\nMarketing Team",
+        "expected_category": "Spam & Irrelevant Messages"
+    }
+]

@@ -13,3 +13,7 @@ Thumbs.db
 
 # Model files
 model/*.pkl
+
+# env file
+.env
+
