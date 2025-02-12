@@ -1,6 +1,7 @@
 import os
 import sys
-import openai
+import json
+import requests
 from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv  # Load environment variables
 
@@ -17,13 +18,13 @@ app = Flask(__name__, static_folder=PROJECT_ROOT, static_url_path="")
 load_dotenv()
 
 # Get API Key from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_API_ENDPOINT = os.getenv("DEEPSEEK_API_ENDPOINT")
+DEEPSEEK_MODEL = 'deepseek-r1:1.5b'
+DEEPSEEK_TEMPERATURE = 0.6  # Response randomness (0 = deterministic, 1 = more creative); Documentation recommends 0.5 to 0.7
 
-if not OPENAI_API_KEY:
-    raise ValueError("Missing OpenAI API Key. Set it in the .env file.")
-
-# Initialize OpenAI client with the correct structure
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+if not DEEPSEEK_API_KEY or not DEEPSEEK_API_ENDPOINT:
+    raise ValueError("Missing DeepSeek API Key or Endpoint. Set them in the .env file.")
 
 # Updated predefined categories with NGO-specific focus
 CATEGORIES = [
@@ -52,19 +53,48 @@ def predict_category(subject, body, sender):
     Respond with only the category name.
     """
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Cheapest model
-            messages=[{"role": "system", "content": prompt}],
-            temperature=0.0,
-            max_tokens=10,
-        )
+    headers = {
+        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+        "Content-Type": "application/json"
+    }
 
-        category = response.choices[0].message.content.strip()
+    payload = {
+        "model": DEEPSEEK_MODEL,
+        "temperature": DEEPSEEK_TEMPERATURE,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    # Print the request details
+    print("\n[DEBUG] Sending request to DeepSeek API:")
+    print("URL:", DEEPSEEK_API_ENDPOINT)
+    print("Headers:", json.dumps(headers, indent=4))
+    print("Payload:", json.dumps(payload, indent=4))
+
+    try:
+        response = requests.post(DEEPSEEK_API_ENDPOINT, json=payload, headers=headers)
+
+        # Print the response details
+        print("\n[DEBUG] Response from DeepSeek API:")
+        print("Status Code:", response.status_code)
+        print("Response Body:", response.text)
+
+        # Check if the request was successful
+        if response.status_code != 200:
+            return f"Error: API request failed with status {response.status_code} - {response.text}"
+
+        response_data = response.json()
+
+        # Extract only the last line after the <think> block to get the predicted category from the response
+        full_response = response_data["choices"][0]["message"]["content"].strip()
+        category = full_response.split("\n")[-1].strip()  # Extract the last line
+
+        print("\n[DEBUG] Predicted Category:", category)
 
         # Validate that the response is one of the predefined categories
         if category not in CATEGORIES:
-            category = "Uncategorized"  # Fallback if ChatGPT gives an unexpected output
+            category = "Uncategorized"  # Fallback if the AI provides unexpected output
 
         return category
 
