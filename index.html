@@ -16,20 +16,10 @@
       <section class="form-container">
         <h2>🚀 Classify Your Emails Instantly</h2>
         <p>
-          Enter the sender email, subject, and body of the email to receive an
-          AI-generated category.
+          Enter the email subject, sender email, and body of the email to
+          receive an AI-generated category and subcategory.
         </p>
         <form id="email-form">
-          <div class="input-group">
-            <label for="sender">📧 Sender Email</label>
-            <input
-              type="email"
-              id="sender"
-              name="sender"
-              required
-              placeholder="example@email.com"
-            />
-          </div>
           <div class="input-group">
             <label for="subject">📝 Email Subject</label>
             <input
@@ -38,6 +28,16 @@
               name="subject"
               required
               placeholder="Enter email subject"
+            />
+          </div>
+          <div class="input-group">
+            <label for="sender">📧 Sender Email</label>
+            <input
+              type="email"
+              id="sender"
+              name="sender"
+              required
+              placeholder="example@email.com"
             />
           </div>
           <div class="input-group">
@@ -60,50 +60,33 @@
       </section>
 
       <section class="category-list">
-        <h2>📌 Supported Categories</h2>
+        <h2>📌 Supported Categories and Subcategories</h2>
         <p>
-          Emails will be classified into one of these predefined categories:
+          Emails will be classified into one of these predefined categories and
+          subcategories:
         </p>
         <ul>
           <li>
-            📋 <b>General Inquiry</b> – General questions about the NGO’s
-            mission or services.
+            🧠 <b>Counselling / Consultation</b>
+            <ul>
+              <li>🔹 Information Request</li>
+            </ul>
           </li>
           <li>
-            🧠 <b>Patient Support & Counseling Request</b> – Seeking mental
-            health resources or therapy guidance.
+            💼 <b>Business</b>
+            <ul>
+              <li>🔹 Web Shop Order</li>
+              <li>🔹 Course Confirmation</li>
+            </ul>
           </li>
           <li>
-            💰 <b>Funding & Donations</b> – Related to fundraising, donor
-            inquiries, and grants.
-          </li>
-          <li>
-            📅 <b>Appointment Scheduling</b> – Requests to schedule or
-            reschedule therapy sessions.
-          </li>
-          <li>
-            🤝 <b>Volunteer & Internship Applications</b> – Applications for
-            volunteering or internships.
-          </li>
-          <li>
-            ⚖️ <b>Legal & Compliance</b> – Topics related to patient rights,
-            GDPR, or legal matters.
-          </li>
-          <li>
-            📢 <b>Awareness & Advocacy</b> – Requests for partnerships,
-            campaigns, or media inquiries.
-          </li>
-          <li>
-            📚 <b>Educational Resources</b> – Requests for mental health guides,
-            articles, or workshops.
-          </li>
-          <li>
-            👨‍👩‍👧 <b>Family & Caregiver Support</b> – Guidance for caregivers
-            supporting individuals with mental health conditions.
-          </li>
-          <li>
-            🛑 <b>Spam & Irrelevant Messages</b> – Advertisements, promotions,
-            or unrelated emails.
+            📞 <b>Communication Type</b>
+            <ul>
+              <li>🔹 Office Visit</li>
+              <li>🔹 Phone Call</li>
+              <li>🔹 Email</li>
+              <li>🔹 Facebook</li>
+            </ul>
           </li>
         </ul>
       </section>
@@ -119,8 +102,8 @@
         .addEventListener("submit", async function (e) {
           e.preventDefault();
 
-          const sender = document.getElementById("sender").value;
           const subject = document.getElementById("subject").value;
+          const sender = document.getElementById("sender").value;
           const body = document.getElementById("body").value;
           const resultElement = document.getElementById("result");
 
@@ -130,7 +113,7 @@
           const response = await fetch("/predict", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sender, subject, body }),
+            body: JSON.stringify({ subject, sender, body }),
           });
 
           const result = await response.json();
