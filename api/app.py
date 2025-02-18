@@ -26,31 +26,30 @@ DEEPSEEK_TEMPERATURE = 0.6  # Response randomness (0 = deterministic, 1 = more c
 if not DEEPSEEK_API_KEY or not DEEPSEEK_API_ENDPOINT:
     raise ValueError("Missing DeepSeek API Key or Endpoint. Set them in the .env file.")
 
-# Updated predefined categories with NGO-specific focus
-CATEGORIES = [
-    "General Inquiry",
-    "Patient Support & Counseling Request",
-    "Funding & Donations",
-    "Appointment Scheduling",
-    "Volunteer & Internship Applications",
-    "Legal & Compliance",
-    "Awareness & Advocacy",
-    "Educational Resources",
-    "Family & Caregiver Support",
-    "Spam & Irrelevant Messages",
-]
+# Updated predefined categories with new structure
+CATEGORIES = {
+    "Counselling/Consultation": ["Information Request"],
+    "Business": ["Web Shop Order", "Course Confirmation"],
+    "Communication Type": ["Office Visit", "Phone Call", "Email", "Facebook"],
+}
 
-
-# Function to get the category from OpenAI API
+# Function to get the category and sub-category from the API
 def predict_category(subject, body, sender):
     prompt = f"""
-    You are an AI email categorization assistant for a small mental health and wellness NGO. Classify the following email into one of the predefined categories: {', '.join(CATEGORIES)}.
+    You are an AI email categorization assistant for a mental health and wellness NGO. 
+    Classify the following email into one of the main categories and corresponding sub-categories from this structure:
+    - Counselling/Consultation: Information Request
+    - Business: Web Shop Order, Course Confirmation
+    - Communication Type: Office Visit, Phone Call, Email, Facebook
 
-    Sender: {sender}
+    The email may be written in Icelandic, English, or a mix of both. Provide your response in this format:
+    "[Main Category]: [Specific Sub-Category] e.g. Counselling/Consultation: Information Request"
+
     Subject: {subject}
+    Sender: {sender}
     Body: {body}
 
-    Respond with only the category name.
+    Respond with only the category and sub-category.
     """
 
     headers = {
@@ -105,19 +104,23 @@ def predict_category(subject, body, sender):
 # Serve the index.html page
 @app.route("/")
 def index():
-    return send_from_directory(PROJECT_ROOT, "index.html")
+    response = send_from_directory(PROJECT_ROOT, "index.html")
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 # API endpoint for prediction
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
-    sender = data.get("sender", "").strip()
     subject = data.get("subject", "").strip()
+    sender = data.get("sender", "").strip()
     body = data.get("body", "").strip()
 
     if not sender or not subject or not body:
-        return jsonify({"error": "Sender, subject, and body are required."}), 400
+        return jsonify({"error": "Subject, sender, and body are required."}), 400
 
     # Get prediction
     category = predict_category(subject, body, sender)
