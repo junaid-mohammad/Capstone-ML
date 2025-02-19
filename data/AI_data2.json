@@ -1,0 +1,302 @@
+[
+    {
+        "sender": "john.doe@company.com",
+        "subject": "Information Request on Counseling Services",
+        "body": "I am interested in learning more about your counseling services for workplace stress. Can you please provide more details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "jane.smith@company.com",
+        "subject": "Order Confirmation for Course",
+        "body": "Thank you for your order of the workplace wellness course. We have received your payment and your enrollment is confirmed.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "customer.service@website.com",
+        "subject": "Order Inquiry",
+        "body": "I have some questions about my recent purchase of a product from your website. Can you assist me?",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "admin@company.com",
+        "subject": "Phone Call Follow-Up",
+        "body": "Following up on our phone call earlier today regarding your inquiry on mental health programs for employees.",
+        "expected_category": "Phone Call"
+    },
+    {
+        "sender": "caregiver@supportgroup.com",
+        "subject": "Support Group for Depression",
+        "body": "I am looking for support groups for family members of those who suffer from depression. Can you help?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "info@university.com",
+        "subject": "Course Enrollment Confirmation",
+        "body": "Your enrollment for the mental health and wellness course has been confirmed. Please check your inbox for further details.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "feedback@company.com",
+        "subject": "Email Feedback Survey",
+        "body": "We would appreciate your feedback on our recent email communications. Please fill out this short survey.",
+        "expected_category": "Email"
+    },
+    {
+        "sender": "client@business.com",
+        "subject": "Request for Consultation",
+        "body": "I would like to schedule a consultation for workplace mental health training.",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "order@shop.com",
+        "subject": "Your Order Confirmation",
+        "body": "Thank you for purchasing from our online shop. Your order has been confirmed.",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "hr@company.com",
+        "subject": "Office Visit Request",
+        "body": "Please let us know your availability for an office visit to discuss your employee wellness benefits.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "familycare@supportgroup.com",
+        "subject": "How to Talk to a Family Member About Depression",
+        "body": "My family member is dealing with depression, and I need advice on how to approach the conversation. Can you provide any guidance?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "support@webshop.com",
+        "subject": "Confirmation of Course Payment",
+        "body": "Your payment for the online course has been successfully processed. We look forward to your participation.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "contact@company.com",
+        "subject": "Phone Consultation Request",
+        "body": "I am requesting a phone consultation regarding mental health services available for employees in our company.",
+        "expected_category": "Phone Call"
+    },
+    {
+        "sender": "wellness@community.org",
+        "subject": "Consultation for Workplace Wellbeing",
+        "body": "We are seeking consultation on improving workplace wellness programs. Please let us know if you can assist.",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "team@socialmedia.com",
+        "subject": "Facebook Interaction",
+        "body": "Thanks for reaching out via Facebook. We're happy to continue the conversation here!",
+        "expected_category": "Facebook"
+    },
+    {
+        "sender": "info@onlinecourse.com",
+        "subject": "Confirmation of Course Registration",
+        "body": "Your registration for the mental health online course has been confirmed. We look forward to seeing you in the course!",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "contact@wellnesscenter.com",
+        "subject": "Follow-up on Office Visit Request",
+        "body": "We received your request for an office visit and would like to confirm your availability for next week.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "mentalhealth@support.org",
+        "subject": "Need Advice on Supporting a Family Member with Anxiety",
+        "body": "My family member is struggling with anxiety, and I need advice on how to support them. Any guidance would be appreciated.",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "marketing@shop.com",
+        "subject": "Huge Discount on Mental Health Supplements",
+        "body": "Special discount for a limited time on mental health supplements. Check out the offer now!",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "newclient@company.com",
+        "subject": "Business Consultation Request",
+        "body": "I would like to schedule a consultation with you regarding our company's mental health initiatives.",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "customer@service.com",
+        "subject": "Product Inquiry Follow-Up",
+        "body": "We wanted to follow up on your inquiry about our latest wellness product. Are you still interested?",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "admin@company.com",
+        "subject": "Call for Information on Family Support Resources",
+        "body": "Can you share some resources or suggestions for supporting families dealing with mental health issues?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "hr@business.com",
+        "subject": "Phone Call Follow-Up Regarding Benefits",
+        "body": "Thank you for discussing employee wellness benefits over the phone. We would like to provide further details.",
+        "expected_category": "Phone Call"
+    },
+    {
+        "sender": "help@mentalhealthcenter.com",
+        "subject": "Online Support Groups for Mental Health",
+        "body": "Can you provide more information on support groups for people dealing with mental health challenges?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "info@company.com",
+        "subject": "Request for Information on Wellness Courses",
+        "body": "I'm interested in knowing more about your wellness courses. Can you provide more details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "support@webshop.com",
+        "subject": "Order Status Update",
+        "body": "Your recent order has been shipped. You can track your package using the link provided.",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "team@socialmedia.com",
+        "subject": "Facebook Message Follow-Up",
+        "body": "We noticed your message on Facebook and would like to assist you further. How can we help?",
+        "expected_category": "Facebook"
+    },
+    {
+        "sender": "info@university.com",
+        "subject": "Course Materials Available",
+        "body": "The materials for your enrolled course are now available. Please log in to access them.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "contact@wellnesscenter.com",
+        "subject": "Office Visit Confirmation",
+        "body": "Your office visit has been scheduled for next Tuesday at 10 AM. Please confirm your availability.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "feedback@company.com",
+        "subject": "Email Campaign Feedback",
+        "body": "We would love to hear your thoughts on our recent email campaign. Please take a moment to share your feedback.",
+        "expected_category": "Email"
+    },
+    {
+        "sender": "client@business.com",
+        "subject": "Request for Information on Training Programs",
+        "body": "I would like to know more about your training programs for workplace wellness. Can you provide details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "order@shop.com",
+        "subject": "Your Recent Purchase",
+        "body": "Thank you for your recent purchase. Your order is being processed and will be shipped soon.",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "hr@company.com",
+        "subject": "Follow-Up on Office Visit",
+        "body": "We would like to follow up on your recent office visit. Please let us know if you have any further questions.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "caregiver@supportgroup.com",
+        "subject": "Request for Resources on Anxiety",
+        "body": "Can you provide resources or guidance for family members supporting someone with anxiety?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "info@onlinecourse.com",
+        "subject": "Course Completion Certificate",
+        "body": "Congratulations on completing the course! Your certificate is now available for download.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "contact@company.com",
+        "subject": "Phone Call Request",
+        "body": "I would like to schedule a phone call to discuss your services. Please let me know your availability.",
+        "expected_category": "Phone Call"
+    },
+    {
+        "sender": "wellness@community.org",
+        "subject": "Request for Information on Wellness Programs",
+        "body": "I am interested in learning more about your wellness programs. Can you provide additional details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "team@socialmedia.com",
+        "subject": "Facebook Message Received",
+        "body": "We have received your message on Facebook and will respond shortly. Thank you for reaching out!",
+        "expected_category": "Facebook"
+    },
+    {
+        "sender": "contact@wellnesscenter.com",
+        "subject": "Office Visit Rescheduling",
+        "body": "We need to reschedule your office visit. Please let us know your availability for next week.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "client@business.com",
+        "subject": "Request for Information on Employee Wellness",
+        "body": "I would like to know more about your employee wellness programs. Can you provide details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "order@shop.com",
+        "subject": "Order Shipped",
+        "body": "Your order has been shipped. You can track your package using the link provided.",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "hr@company.com",
+        "subject": "Office Visit Confirmation",
+        "body": "Your office visit has been confirmed for next Thursday at 2 PM. Please let us know if you need to reschedule.",
+        "expected_category": "Office Visit"
+    },
+    {
+        "sender": "caregiver@supportgroup.com",
+        "subject": "Request for Guidance on Mental Health",
+        "body": "Can you provide guidance or resources for supporting a family member with mental health challenges?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "info@onlinecourse.com",
+        "subject": "Course Enrollment Reminder",
+        "body": "This is a reminder that your course enrollment is due soon. Please complete it at your earliest convenience.",
+        "expected_category": "Course Confirmation"
+    },
+    {
+        "sender": "contact@company.com",
+        "subject": "Phone Call Follow-Up",
+        "body": "Following up on our recent phone call. Please let us know if you have any further questions.",
+        "expected_category": "Phone Call"
+    },
+    {
+        "sender": "wellness@community.org",
+        "subject": "Request for Information on Wellness Initiatives",
+        "body": "I am interested in learning more about your wellness initiatives. Can you provide additional details?",
+        "expected_category": "Information Request"
+    },
+    {
+        "sender": "parent@family.org",
+        "subject": "Inquiry About Recent Order",
+        "body": "Hello, I recently placed an order for sensory toys from your shop. I haven’t received a confirmation email yet. Could you please check the status of my order?",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "caregiver@supportautism.org",
+        "subject": "Missing Item in My Order",
+        "body": "Hi, I received my order today, but one of the items (a communication board) is missing. Could you please look into this and let me know how to proceed?",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "teacher@school.edu",
+        "subject": "Order Delivery Issue",
+        "body": "Hello, I placed an order for educational materials last week, but the delivery address seems to be incorrect. Can you confirm the address and update it if needed?",
+        "expected_category": "Web Shop Order"
+    },
+    {
+        "sender": "therapist@clinic.com",
+        "subject": "Request for Order Details",
+        "body": "Hi, I placed an order for therapy tools a few days ago, but I can’t find the order details in my email. Could you please resend the confirmation and tracking information?",
+        "expected_category": "Web Shop Order"
+    }
+]

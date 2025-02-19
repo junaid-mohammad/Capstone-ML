@@ -4,6 +4,17 @@ import openai
 from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv  # Load environment variables
 
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import torch
+
+model_dir = 'model/trained_roberta'
+if not os.path.exists(model_dir):
+    raise Exception("Model does not exist. Create by 'python model/roberta_train.py")
+
+# Example of loading the model again for inference
+model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+tokenizer = AutoTokenizer.from_pretrained(model_dir)
+
 # Add the project root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -12,18 +23,18 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # Initialize Flask app
 app = Flask(__name__, static_folder=PROJECT_ROOT, static_url_path="")
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Get API Key from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not OPENAI_API_KEY:
-    raise ValueError("Missing OpenAI API Key. Set it in the .env file.")
-
-# Initialize OpenAI client with the correct structure
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+#
+# # Load environment variables from .env file
+# load_dotenv()
+#
+# # Get API Key from environment variables
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+#
+# if not OPENAI_API_KEY:
+#     raise ValueError("Missing OpenAI API Key. Set it in the .env file.")
+#
+# # Initialize OpenAI client with the correct structure
+# client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Updated predefined categories with new structure
 CATEGORIES = {
@@ -31,40 +42,23 @@ CATEGORIES = {
     "Business": ["Web Shop Order", "Course Confirmation"],
     "Communication Type": ["Office Visit", "Phone Call", "Email", "Facebook"],
 }
+all_categories = [category for subcategories in CATEGORIES.values() for category in subcategories]
+CATEGORY_TO_INT = {category: idx for idx, category in enumerate(all_categories)}
+INT_TO_CATEGORY = {idx: category for category, idx in CATEGORY_TO_INT.items()}
+
 
 
 # Function to get the category and sub-category from OpenAI API
 def predict_category(subject, body, sender):
-    prompt = f"""
-    You are an AI email categorization assistant for a mental health and wellness NGO. 
-    Classify the following email into one of the main categories and corresponding sub-categories from this structure:
-    - Counselling/Consultation: Information Request
-    - Business: Web Shop Order, Course Confirmation
-    - Communication Type: Office Visit, Phone Call, Email, Facebook
-
-    The email may be written in Icelandic, English, or a mix of both. Provide your response in this format:
-    "[Main Category]: [Specific Sub-Category] e.g. Counselling/Consultation: Information Request"
-
-    Subject: {subject}
-    Sender: {sender}
-    Body: {body}
-
-    Respond with only the category and sub-category.
-    """
-
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Cheapest model
-            messages=[{"role": "system", "content": prompt}],
-            temperature=0.0,
-            max_tokens=50,
-        )
-
-        category_response = response.choices[0].message.content.strip()
-        return category_response
-
-    except Exception as e:
-        return f"Error: {str(e)}"
+    # Predicting the category for a new text
+    text = subject + " FROM " + sender + ": " + body
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=128)
+    with torch.no_grad():
+        outputs = model(**inputs)
+        predictions = torch.argmax(outputs.logits, dim=-1)
+        predicted_label = INT_TO_CATEGORY[predictions.item()]
+        # print(f"Predicted Category: {predicted_label}")
+        return predicted_label
 
 
 # Serve the index.html page with no-cache header to prevent caching issues
