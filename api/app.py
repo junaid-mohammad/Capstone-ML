@@ -13,14 +13,17 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 # Initialize Flask app
 app = Flask(__name__, static_folder=PROJECT_ROOT, static_url_path="")
 
-# Updated predefined categories with new structure
-CATEGORIES = {
-    "Counseling/Consultation": ["Information Request"],
-    "Business": ["Web Shop Order", "Course Confirmation"],
-    "Communication Type": ["Office Visit", "Phone Call", "Email", "Facebook"],
+APPEND_MAIN_CATEGORY = False  # Set to True to include main category in output
+CATEGORY_MAP = {
+    "Information Request": "Counseling/Consultation",
+    "Web Shop Order": "Business",
+    "Course Confirmation": "Business",
+    "Office Visit": "Communication Type",
+    "Phone Call": "Communication Type",
+    "Email": "Communication Type",
+    "Facebook": "Communication Type",
 }
 
-# Ollama Local API URL
 global OLLAMA_MODEL
 OLLAMA_SERVER = "127.0.0.1:11434"
 OLLAMA_API_URL = f"http://{OLLAMA_SERVER}/api/chat"
@@ -30,7 +33,7 @@ OLLAMA_MODEL = "deepseek-r1:1.5b"
 def predict_category(subject, body, sender):
     prompt = f"""
     You are an AI assistant trained to classify emails for a mental health and wellness NGO.
-    Your task is to classify the email below into exactly into one of the following [Main Category]: [Sub-Category] formats:
+    Your task is to classify the email below into exactly one of the following categories:
     - Information Request
     - Web Shop Order
     - Course Confirmation
@@ -42,15 +45,14 @@ def predict_category(subject, body, sender):
     Sender: {sender}
     Body: {body}
 
-    The last line of the output format must be a single line, Do NOT add explanations, tags, or extra formatting, exactly in this format:
-    Main Category: Sub-Category
-
-    Example:
-    Counseling/Consultation: Information Request
-    Business: Course Confirmation
-    Business: Web Shop Order
+    Your response must always have the prediction on the LAST and SEPARATE line. 
+    Do not include tags like "Prediction:" or quotes.
+    Do not add any extra formatting, markdown, or blank lines after the result.
     
-    If the email does not fit any of the categories, please classify it as "Uncategorized".
+    Example (last line only): 
+    Course Confirmation
+    
+    Every email must be classified into exactly one of the categories.
     """
 
     payload = {
@@ -60,44 +62,29 @@ def predict_category(subject, body, sender):
     }
 
     try:
-        # Send the request to the Ollama Local API
-        print("[DEBUG] Sending request to Ollama Local API:")
-        print("URL:", OLLAMA_API_URL)
-        print("Payload:", json.dumps(payload, indent=4))
-
         response = requests.post(OLLAMA_API_URL, json=payload)
 
-        # Check if the request was successful
         if response.status_code != 200:
             return f"Error: API request failed with status {response.status_code} - {response.text}"
 
         response_data = response.json()
-        print("[DEBUG] API Response:", json.dumps(response_data, indent=4))
+        full_response = response_data.get("message", {}).get("content", "").strip()
+        subcategory = full_response.split("\n")[-1].strip()  # Extract the last line
 
-        # Extract the model's response
-        if "message" in response_data and "content" in response_data["message"]:
-            full_response = response_data["message"]["content"].strip()
-            category = full_response.split("\n")[-1].strip()  # Extract the last line
-        else:
-            return f"Error: Unexpected API response format - {response_data}"
+        # Check if subcategory is valid
+        if subcategory in CATEGORY_MAP:
+            main_category = CATEGORY_MAP[subcategory]
+            print(f"[DEBUG] Predicted: {main_category}: {subcategory}")
 
-        try:
-            # Extract main category and sub-category
-            main_category, sub_category = category.split(":", 1)
-            main_category, sub_category = main_category.strip(), sub_category.strip()
+            if APPEND_MAIN_CATEGORY:
+                return f"{main_category}: {subcategory}"
+            else:
+                return subcategory
 
-            # Validate that the response is a known category
-            if main_category in CATEGORIES and sub_category in CATEGORIES[main_category]:
-                print("[DEBUG] Predicted Category:", main_category, "-", sub_category)
-                return category
-
-            print("[WARNING] Model returned an unknown category. Logging response.")
-            print("[DEBUG] Full Response:", full_response, sub_category, main_category)
+        elif subcategory == "Uncategorized":
             return "Uncategorized"
-
-        except ValueError as e:
-            print("\n[ERROR] Issue extracting category. Logging response.")
-            print("[DEBUG] Full Response:", full_response)
+        else:
+            print("[DEBUG] Invalid subcategory detected, falling back to full response:\n", full_response)
             return "Uncategorized"
 
     except Exception as e:
@@ -129,7 +116,7 @@ def predict():
     model_override = request.headers.get("X-Model")  
     if model_override:
         OLLAMA_MODEL = model_override  # Modify the global variable safely
-        print (f"\n[DEBUG] Model override detected: {OLLAMA_MODEL}")
+        # print (f"\n[DEBUG] Model override detected: {OLLAMA_MODEL}")
 
     # Get prediction
     category = predict_category(subject, body, sender)
