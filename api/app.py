@@ -21,26 +21,36 @@ CATEGORIES = {
 }
 
 # Ollama Local API URL
-OLLAMA_API_URL = "http://127.0.0.1:11434/api/chat"
-OLLAMA_MODEL = "deepseek-r1:8b"
+global OLLAMA_MODEL
+OLLAMA_SERVER = "127.0.0.1:11434"
+OLLAMA_API_URL = f"http://{OLLAMA_SERVER}/api/chat"
+OLLAMA_MODEL = "deepseek-r1:1.5b"
 
 # Get the category and sub-category from the locally hosted model
 def predict_category(subject, body, sender):
     prompt = f"""
-    You are an AI email categorization assistant for a mental health and wellness NGO.
-    Classify the following email into one of the main categories and corresponding sub-categories from this structure:
-    - Counseling/Consultation: Information Request
-    - Business: Web Shop Order, Course Confirmation
-    - Communication Type: Office Visit, Phone Call, Email, Facebook
+    You are an AI assistant trained to classify emails for a mental health and wellness NGO.
+    Your task is to classify the email below into exactly into one of the following [Main Category]: [Sub-Category] formats:
+    - Information Request
+    - Web Shop Order
+    - Course Confirmation
 
-    The email may be written in Icelandic, English, or a mix of both. Provide your response in this format:
-    "[Main Category]: [Specific Sub-Category] e.g., Counseling/Consultation: Information Request"
+    The email may be written in English, Icelandic, or both.
 
+    Email to classify:
     Subject: {subject}
     Sender: {sender}
     Body: {body}
 
-    Respond with only the Category and Sub-Category.
+    The last line of the output format must be a single line, Do NOT add explanations, tags, or extra formatting, exactly in this format:
+    Main Category: Sub-Category
+
+    Example:
+    Counseling/Consultation: Information Request
+    Business: Course Confirmation
+    Business: Web Shop Order
+    
+    If the email does not fit any of the categories, please classify it as "Uncategorized".
     """
 
     payload = {
@@ -51,7 +61,7 @@ def predict_category(subject, body, sender):
 
     try:
         # Send the request to the Ollama Local API
-        print("\n[DEBUG] Sending request to Ollama Local API:")
+        print("[DEBUG] Sending request to Ollama Local API:")
         print("URL:", OLLAMA_API_URL)
         print("Payload:", json.dumps(payload, indent=4))
 
@@ -62,7 +72,7 @@ def predict_category(subject, body, sender):
             return f"Error: API request failed with status {response.status_code} - {response.text}"
 
         response_data = response.json()
-        print("\n[DEBUG] API Response:", json.dumps(response_data, indent=4))
+        print("[DEBUG] API Response:", json.dumps(response_data, indent=4))
 
         # Extract the model's response
         if "message" in response_data and "content" in response_data["message"]:
@@ -78,11 +88,11 @@ def predict_category(subject, body, sender):
 
             # Validate that the response is a known category
             if main_category in CATEGORIES and sub_category in CATEGORIES[main_category]:
-                print("\n[DEBUG] Predicted Category:", main_category, "-", sub_category)
+                print("[DEBUG] Predicted Category:", main_category, "-", sub_category)
                 return category
 
-            print("\n[WARNING] Model returned an unknown category. Logging response.")
-            print("[DEBUG] Full Response:", full_response)
+            print("[WARNING] Model returned an unknown category. Logging response.")
+            print("[DEBUG] Full Response:", full_response, sub_category, main_category)
             return "Uncategorized"
 
         except ValueError as e:
@@ -112,6 +122,14 @@ def predict():
 
     if not sender or not subject or not body:
         return jsonify({"error": "Subject, sender, and body are required."}), 400
+    
+    global OLLAMA_MODEL # Override the model if specified in the request header
+    
+    # Use the model specified in the request headers, or fallback to the default
+    model_override = request.headers.get("X-Model")  
+    if model_override:
+        OLLAMA_MODEL = model_override  # Modify the global variable safely
+        print (f"\n[DEBUG] Model override detected: {OLLAMA_MODEL}")
 
     # Get prediction
     category = predict_category(subject, body, sender)
