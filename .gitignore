@@ -5,8 +5,9 @@ __pycache__/
 .env/
 machine_learning_env/
 
-# macOS
+# macOS and vscode
 .DS_Store
+.vscode
 
 # Windows
 Thumbs.db

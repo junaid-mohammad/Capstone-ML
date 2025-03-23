@@ -119,7 +119,7 @@
           const result = await response.json();
 
           if (response.ok) {
-            resultElement.textContent = `🎯 ${result.category}`;
+            resultElement.textContent = `🎯 ${result.join(", ")}`;
             resultElement.style.color = "#ffcc00"; // Ensure color pops
             resultElement.classList.add("result-show");
           } else {

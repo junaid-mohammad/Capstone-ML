@@ -8,10 +8,10 @@ from dotenv import load_dotenv  # Load environment variables
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Get the absolute path of the project root
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize Flask app
-app = Flask(__name__, static_folder=PROJECT_ROOT, static_url_path="")
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,7 +34,7 @@ CATEGORIES = {
 
 
 # Function to get the category and sub-category from OpenAI API
-def predict_category(subject, body, sender):
+def predict_category(subject, sender, body):
     prompt = f"""
     You are an AI email categorization assistant for a mental health and wellness NGO. 
     Classify the following email into one of the main categories and corresponding sub-categories from this structure:
@@ -89,8 +89,16 @@ def predict():
         return jsonify({"error": "Subject, sender, and body are required."}), 400
 
     # Get prediction
-    category = predict_category(subject, body, sender)
-    return jsonify({"category": category})
+    category_string = predict_category(subject, body, sender)
+
+    # Convert to list format, e.g., "Business: Web Shop Order" → ["Business", "Web Shop Order"]
+    category_list = (
+        [part.strip() for part in category_string.split(":")]
+        if ":" in category_string
+        else [category_string]
+    )
+
+    return jsonify(category_list)
 
 
 if __name__ == "__main__":
