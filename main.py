@@ -1,67 +1,101 @@
 import os
 import sys
-import openai
 from flask import Flask, request, jsonify, send_from_directory
-from dotenv import load_dotenv  # Load environment variables
+from dotenv import load_dotenv
+import requests
 
 # Add the project root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-# Get the absolute path of the project root
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize Flask app
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
-# Load environment variables from .env file
+'''
+The model load time (when switching) is an additional ~10-50 seconds overhead. The DEEPSEEK_MODEL available are:
+- deepseek-r1:1.5b (~20-60s prediction time)
+- deepseek-r1:7b (~3-8 minutes prediction time)
+'''
+
+# Load environment variables
 load_dotenv()
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_API_ENDPOINT = os.getenv("DEEPSEEK_API_ENDPOINT")
+DEEPSEEK_MODEL = 'deepseek-r1:1.5b'
+DEEPSEEK_TEMPERATURE = 0.6
+APPEND_MAIN_CATEGORY = False  # Set to True to include main category in response (not recommended)
 
-# Get API Key from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not DEEPSEEK_API_KEY or not DEEPSEEK_API_ENDPOINT:
+    raise ValueError("Missing DeepSeek API Key or Endpoint. Set them in the .env file.")
 
-if not OPENAI_API_KEY:
-    raise ValueError("Missing OpenAI API Key. Set it in the .env file.")
-
-# Initialize OpenAI client with the correct structure
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
-
-# Updated predefined categories with new structure
-CATEGORIES = {
-    "Counselling/Consultation": ["Information Request"],
-    "Business": ["Web Shop Order", "Course Confirmation"],
-    "Communication Type": ["Office Visit", "Phone Call", "Email", "Facebook"],
+# Sub-category → Main category mapping
+CATEGORY_MAP = {
+    "Information Request": "Counselling/Consultation",
+    "Web Shop Order": "Business",
+    "Course Confirmation": "Business",
+    "Office Visit": "Communication Type",
+    "Phone Call": "Communication Type",
+    "Email": "Communication Type",
+    "Facebook": "Communication Type",
 }
-
 
 # Function to get the category and sub-category from OpenAI API
 def predict_category(subject, sender, body):
     prompt = f"""
-    You are an AI email categorization assistant for a mental health and wellness NGO. 
-    Classify the following email into one of the main categories and corresponding sub-categories from this structure:
-    - Counselling/Consultation: Information Request
-    - Business: Web Shop Order, Course Confirmation
-    - Communication Type: Office Visit, Phone Call, Email, Facebook
+    You are an AI assistant trained to classify emails for a mental health and wellness NGO.
 
-    The email may be written in Icelandic, English, or a mix of both. Provide your response in this format:
-    "[Main Category]: [Specific Sub-Category] e.g. Counselling/Consultation: Information Request"
+    Classify the following email into exactly one of the following categories:
+    - Information Request
+    - Web Shop Order
+    - Course Confirmation
 
+    The email may be written in English, Icelandic, or both.
+
+    Email:
     Subject: {subject}
     Sender: {sender}
     Body: {body}
 
-    Respond with only the category and sub-category.
+    Your response must ALWAYS have the prediction on the LAST and SEPARATE line.
+    Do not include labels like "Prediction:", quotes, or markdown.
+    Do not add any extra formatting, markdown, or blank lines after the result.
+    No extra commentary.
+
+    Example (last line only):
+    Information Request
     """
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Cheapest model
-            messages=[{"role": "system", "content": prompt}],
-            temperature=0.0,
-            max_tokens=50,
-        )
+    headers = {
+        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+        "Content-Type": "application/json"
+    }
 
-        category_response = response.choices[0].message.content.strip()
-        return category_response
+    payload = {
+        "model": DEEPSEEK_MODEL,
+        "temperature": DEEPSEEK_TEMPERATURE,
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    print("\n[DEBUG] Sending request to DeepSeek API...")
+    try:
+        response = requests.post(DEEPSEEK_API_ENDPOINT, json=payload, headers=headers)
+        print("[DEBUG] Status Code:", response.status_code)
+
+        if response.status_code != 200:
+            return f"Error: API request failed - {response.status_code}: {response.text}"
+
+        full_response = response.json()["choices"][0]["message"]["content"].strip()
+        subcategory = full_response.split("\n")[-1].strip()
+        print(f"[DEBUG] Subcategory predicted: {subcategory}")
+
+        if subcategory in CATEGORY_MAP:
+            main_category = CATEGORY_MAP[subcategory]
+            return f"{main_category}: {subcategory}" if APPEND_MAIN_CATEGORY else subcategory
+        elif subcategory.lower() == "uncategorized":
+            return "Uncategorized"
+        else:
+            print("[WARNING] Invalid subcategory. Full response was:\n", full_response)
+            return "Uncategorized"
 
     except Exception as e:
         return f"Error: {str(e)}"
@@ -75,7 +109,6 @@ def index():
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
-
 
 # API endpoint for prediction
 @app.route("/predict", methods=["POST"])
@@ -99,7 +132,6 @@ def predict():
     )
 
     return jsonify(category_list)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
